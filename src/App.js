@@ -65,7 +65,7 @@ const translations = {
       ppda: 'PPDA (Platforma DA)'
     }
   },
-  
+
   ru: {
     quizTitle: 'Опрос партий Молдовы',
     questionLabel: 'Вопрос',
@@ -140,7 +140,7 @@ export default function App() {
   });
 
   // Localized content
-  const { quizTitle, questionLabel, ofLabel, back, reset, resultTitle, questions, parties } = translations[lang];
+  const { quizTitle, questionLabel, ofLabel, back, reset, resultTitle, questions } = translations[lang];
 
   // Quiz state
   const [answers, setAnswers] = useState(() => {
