@@ -1,186 +1,284 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import './App.css';
 
-// Party definitions
-const parties = [
-  { id: 'pas', name: 'Party of Action and Solidarity (PAS)' },
-  { id: 'bcs', name: 'Bloc of Communists and Socialists (BCS)' },
-  { id: 'victory', name: 'Victory (Ilan Shor bloc)' },
-  { id: 'alternative', name: 'Alternative (Ion Ceban bloc)' },
-  { id: 'nstru', name: 'Our Party (Partidul Nostru)' },
-];
-
-// Questionnaire
-const questions = [
-  {
-    id: 1,
-    text: 'Which foreign policy direction do you support for Moldova?',
-    options: [
-      { text: 'Further EU integration and Western alignment', scores: { pas: 2, alternative: 1 } },
-      { text: 'Maintain neutrality between East and West', scores: { alternative: 2 } },
-      { text: 'Stronger ties with Russia', scores: { bcs: 2, victory: 1 } },
-    ],
-  },
-  {
-    id: 2,
-    text: 'What is your preferred economic model?',
-    options: [
-      { text: 'Liberal free market with minimal state intervention', scores: { pas: 2 } },
-      { text: 'Balanced market with social safety nets', scores: { alternative: 2, nstru: 1 } },
-      { text: 'Strong state-led economy and redistribution', scores: { bcs: 2, victory: 1 } },
-    ],
-  },
-  {
-    id: 3,
-    text: 'How do you prioritize anti-corruption and judicial reform?',
-    options: [
-      { text: 'Top priority - urgent and deep reforms needed', scores: { pas: 2 } },
-      { text: 'Important but should be balanced with stability', scores: { alternative: 2, nstru: 1 } },
-      { text: 'Not a priority - focus on traditional governance', scores: { bcs: 2, victory: 1 } },
-    ],
-  },
-  {
-    id: 4,
-    text: 'What is your stance on social and cultural issues?',
-    options: [
-      { text: 'Progressive and reform-oriented', scores: { pas: 2, alternative: 1 } },
-      { text: 'Moderate and consensus-driven', scores: { alternative: 2, nstru: 1 } },
-      { text: 'Traditional and conservative values', scores: { bcs: 2, victory: 1 } },
-    ],
-  },
-  {
-    id: 5,
-    text: 'How should power be distributed between central and local authorities?',
-    options: [
-      { text: 'Strong central government for cohesion', scores: { pas: 1, bcs: 1 } },
-      { text: 'Decentralization to empower local communities', scores: { alternative: 2, nstru: 1 } },
-      { text: 'Mixed approach with clear competences', scores: { pas: 1, alternative: 1, bcs: 1 } },
-    ],
-  },
-];
-
-function App() {
-  const [answers, setAnswers] = useState({});
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Load state from localStorage
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('quizState'));
-      if (saved) {
-        setAnswers(saved.answers || {});
-        setCurrentIndex(
-          typeof saved.currentIndex === 'number' ? saved.currentIndex : 0
-        );
+// Translation objects with per-option scores
+const translations = {
+  ro: {
+    quizTitle: 'Chestionar partide Moldova',
+    questionLabel: 'Întrebare',
+    ofLabel: 'din',
+    back: 'Înapoi',
+    reset: 'Resetează chestionar',
+    resultTitle: 'Partidul cu care ești aliniat:',
+    questions: [
+      {
+        text: 'Moldova ar trebui să crească cheltuielile sociale.',
+        options: [
+          { text: 'Complet de acord', scores: { pas: 1, psrm: 3, pdm: 1, ppda: 0 } },
+          { text: 'De acord',        scores: { pas: 1, psrm: 2, pdm: 1, ppda: 0 } },
+          { text: 'Neutru',           scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Împotrivă',        scores: { pas: 3, psrm: 0, pdm: 0, ppda: 0 } }
+        ]
+      },
+      {
+        text: 'Moldova ar trebui să aprofundeze legăturile cu UE în loc de Rusia.',
+        options: [
+          { text: 'În totalitate UE', scores: { pas: 3, psrm: 0, pdm: 2, ppda: 1 } },
+          { text: 'Mai mult UE',      scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Neutru',           scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Mai mult Rusia',   scores: { pas: 0, psrm: 3, pdm: 0, ppda: 1 } }
+        ]
+      },
+      {
+        text: 'Subvențiile agricole pentru fermierii mici ar trebui majorate.',
+        options: [
+          { text: 'Da, majorat',      scores: { pas: 1, psrm: 0, pdm: 1, ppda: 3 } },
+          { text: 'Menținut',         scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Reducere mică',     scores: { pas: 0, psrm: 1, pdm: 2, ppda: 1 } },
+          { text: 'Eliminat',         scores: { pas: 0, psrm: 2, pdm: 0, ppda: 1 } }
+        ]
+      },
+      {
+        text: 'Reforma anticorupție este o prioritate pentru tine.',
+        options: [
+          { text: 'Maxim prioritară', scores: { pas: 3, psrm: 0, pdm: 1, ppda: 2 } },
+          { text: 'Prioritară',       scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Puțin prioritară', scores: { pas: 0, psrm: 1, pdm: 1, ppda: 0 } },
+          { text: 'Neimportantă',      scores: { pas: 0, psrm: 3, pdm: 1, ppda: 0 } }
+        ]
+      },
+      {
+        text: 'Moldova ar trebui să investească masiv în energie regenerabilă.',
+        options: [
+          { text: 'Absolut',          scores: { pas: 2, psrm: 0, pdm: 1, ppda: 3 } },
+          { text: 'Echilibrat',       scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Neutru',           scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Nu',               scores: { pas: 0, psrm: 3, pdm: 0, ppda: 0 } }
+        ]
       }
-    } catch (e) {
-      console.warn('Failed to parse saved state', e);
+    ],
+    parties: {
+      pas: 'PAS (Partidul Acțiune și Solidaritate)',
+      psrm: 'PSRM (Partidul Socialiștilor)',
+      pdm: 'PDM (Partidul Democrat)',
+      ppda: 'PPDA (Platforma DA)'
     }
-  }, []);
-
-  // Persist state to localStorage
-  useEffect(() => {
-    localStorage.setItem('quizState', JSON.stringify({ answers, currentIndex }));
-  }, [answers, currentIndex]);
-
-  const completed = Object.keys(answers).length === questions.length;
-
-  const handleSelect = (idx) => {
-    const qid = questions[currentIndex].id;
-    setAnswers({ ...answers, [qid]: idx });
-  };
-
-  const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
-  const computeScores = () => {
-    const scoreMap = parties.reduce((acc, p) => ({ ...acc, [p.id]: 0 }), {});
-    Object.entries(answers).forEach(([qid, optIdx]) => {
-      const question = questions.find(q => q.id === parseInt(qid));
-      if (question) {
-        const optionScores = question.options[optIdx].scores;
-        Object.entries(optionScores).forEach(([pid, val]) => {
-          scoreMap[pid] += val;
-        });
+  },
+  
+  ru: {
+    quizTitle: 'Опрос партий Молдовы',
+    questionLabel: 'Вопрос',
+    ofLabel: 'из',
+    back: 'Назад',
+    reset: 'Сбросить опрос',
+    resultTitle: 'Партия, с которой вы совпадаете:',
+    questions: [
+      {
+        text: 'Молдове следует увеличить социальные расходы.',
+        options: [
+          { text: 'Полностью согласен', scores: { pas: 1, psrm: 3, pdm: 1, ppda: 0 } },
+          { text: 'Согласен',           scores: { pas: 1, psrm: 2, pdm: 1, ppda: 0 } },
+          { text: 'Нейтрально',         scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Не согласен',        scores: { pas: 3, psrm: 0, pdm: 0, ppda: 0 } }
+        ]
+      },
+      {
+        text: 'Молдове следует укреплять связи с ЕС вместо России.',
+        options: [
+          { text: 'Только ЕС',          scores: { pas: 3, psrm: 0, pdm: 2, ppda: 1 } },
+          { text: 'Скорее ЕС',         scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Нейтрально',        scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Скорее Россия',     scores: { pas: 0, psrm: 3, pdm: 0, ppda: 1 } }
+        ]
+      },
+      {
+        text: 'Сельскохозяйственные субсидии для мелких фермеров следует увеличить.',
+        options: [
+          { text: 'Да, увеличить',      scores: { pas: 1, psrm: 0, pdm: 1, ppda: 3 } },
+          { text: 'Оставить',          scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Немного сократить',  scores: { pas: 0, psrm: 1, pdm: 2, ppda: 1 } },
+          { text: 'Отменить',          scores: { pas: 0, psrm: 2, pdm: 0, ppda: 1 } }
+        ]
+      },
+      {
+        text: 'Борьба с коррупцией – приоритет для вас.',
+        options: [
+          { text: 'Крайне приоритетно', scores: { pas: 3, psrm: 0, pdm: 1, ppda: 2 } },
+          { text: 'Приоритетно',       scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Средний приоритет', scores: { pas: 0, psrm: 1, pdm: 1, ppda: 0 } },
+          { text: 'Не важно',          scores: { pas: 0, psrm: 3, pdm: 1, ppda: 0 } }
+        ]
+      },
+      {
+        text: 'Молдова должна существенно инвестировать в возобновляемую энергию.',
+        options: [
+          { text: 'Абсолютно',         scores: { pas: 2, psrm: 0, pdm: 1, ppda: 3 } },
+          { text: 'Сбалансированно',   scores: { pas: 2, psrm: 0, pdm: 1, ppda: 1 } },
+          { text: 'Нейтрально',        scores: { pas: 1, psrm: 1, pdm: 1, ppda: 1 } },
+          { text: 'Нет',               scores: { pas: 0, psrm: 3, pdm: 0, ppda: 0 } }
+        ]
       }
-    });
-    return scoreMap;
+    ],
+    parties: {
+      pas: 'ПАС (Партия Действия и Солидарности)',
+      psrm: 'ПСРМ (Партия Социалистов)',
+      pdm: 'ПДМ (Демократическая Партия)',
+      ppda: 'ППДА (Платформа ДОСТОИНСТВА и ИСТИНЫ)'
+    }
+  }
+};
+
+const LANGS = ['ro', 'ru'];
+const PARTY_KEYS = ['pas', 'psrm', 'pdm', 'ppda'];
+
+export default function App() {
+  // Language state
+  const [lang, setLang] = useState(() => {
+    const saved = localStorage.getItem('quizLang');
+    return saved && LANGS.includes(saved) ? saved : 'ro';
+  });
+
+  // Localized content
+  const { quizTitle, questionLabel, ofLabel, back, reset, resultTitle, questions, parties } = translations[lang];
+
+  // Quiz state
+  const [answers, setAnswers] = useState(() => {
+    const saved = localStorage.getItem('quizAnswers');
+    return saved ? JSON.parse(saved) : Array(questions.length).fill(null);
+  });
+
+  const [current, setCurrent] = useState(() => {
+    const saved = localStorage.getItem('quizIndex');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+
+  const [showResult, setShowResult] = useState(() => {
+    const saved = localStorage.getItem('quizComplete');
+    return saved === 'true';
+  });
+
+  const [fadeIn, setFadeIn] = useState(true);
+
+  // Persist language
+  useEffect(() => {
+    localStorage.setItem('quizLang', lang);
+    setFadeIn(false);
+    const t = setTimeout(() => setFadeIn(true), 50);
+    return () => clearTimeout(t);
+  }, [lang]);
+
+  // Persist quiz state
+  useEffect(() => {
+    localStorage.setItem('quizAnswers', JSON.stringify(answers));
+    localStorage.setItem('quizIndex', current);
+    localStorage.setItem('quizComplete', showResult);
+  }, [answers, current, showResult]);
+
+  // Handle answer selection
+  const handleAnswer = (scores) => {
+    const nxt = [...answers];
+    nxt[current] = scores;
+    setAnswers(nxt);
+    if (current < questions.length - 1) setCurrent(current + 1);
+    else setShowResult(true);
   };
 
-  const getResult = () => {
-    const scores = computeScores();
-    const maxScore = Math.max(...Object.values(scores));
-    return parties.filter(p => scores[p.id] === maxScore);
+  // Go back
+  const goBack = () => current > 0 && setCurrent(current - 1);
+
+  // Reset quiz
+  const resetQuiz = () => {
+    setAnswers(Array(questions.length).fill(null));
+    setCurrent(0);
+    setShowResult(false);
+    localStorage.removeItem('quizAnswers');
+    localStorage.removeItem('quizIndex');
+    localStorage.removeItem('quizComplete');
   };
 
-  const handleReset = () => {
-    setAnswers({});
-    setCurrentIndex(0);
-    localStorage.removeItem('quizState');
-  };
+  // Compute party totals
+  const totals = PARTY_KEYS.reduce((acc, key) => {
+    acc[key] = 0;
+    return acc;
+  }, {});
 
-  if (!completed) {
-    const question = questions[currentIndex];
-    const selectedIdx = answers[question.id];
+  answers.forEach(ans => {
+    if (ans) {
+      PARTY_KEYS.forEach(key => {
+        totals[key] += ans[key] || 0;
+      });
+    }
+  });
 
-    return (
-      <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-        <h2>Question {currentIndex + 1} of {questions.length}</h2>
-        <p>{question.text}</p>
-        {question.options.map((opt, idx) => (
+  const winnerKey = PARTY_KEYS.reduce((maxKey, key) =>
+    totals[key] > totals[maxKey] ? key : maxKey,
+  PARTY_KEYS[0]);
+
+  // Progress
+  const progressPct = Math.round(((current + (showResult ? 1 : 0)) / questions.length) * 100);
+
+  return (
+    <div className="quiz-container">
+      <div className="lang-toggle">
+        {LANGS.map(l => (
           <button
-            key={idx}
-            onClick={() => handleSelect(idx)}
-            style={{
-              display: 'block',
-              margin: '0.5rem 0',
-              padding: '0.5rem 1rem',
-              background: idx === selectedIdx ? '#ddd' : '#fff',
-            }}
-          >
-            {opt.text}
-          </button>
+            key={l}
+            className={lang === l ? 'lang-btn active' : 'lang-btn'}
+            onClick={() => setLang(l)}
+          >{l.toUpperCase()}</button>
         ))}
-        <div style={{ marginTop: '1rem' }}>
-          <button onClick={handlePrev} disabled={currentIndex === 0} style={{ marginRight: '1rem' }}>
-            Previous
-          </button>
-          <button onClick={handleNext} disabled={selectedIdx == null}>
-            {currentIndex === questions.length - 1 ? 'Finish' : 'Next'}
+      </div>
+
+      {!showResult ? (
+        <div className={fadeIn ? 'fade-in' : ''}>
+          <h1 className="quiz-title">{quizTitle}</h1>
+          <div className="progress-container">
+            <div className="progress-bar" style={{ width: `${progressPct}%` }} />
+          </div>
+          <h2 className="question-header">
+            {questionLabel} {current + 1} {ofLabel} {questions.length}
+          </h2>
+          <p className="question-text">{questions[current].text}</p>
+          <div className="options">
+            {questions[current].options.map((opt, i) => (
+              <button
+                key={i}
+                className="option"
+                onClick={() => handleAnswer(opt.scores)}
+              >
+                {opt.text}
+              </button>
+            ))}
+          </div>
+          <div className="nav-buttons">
+            <button
+              disabled={current === 0}
+              className="back-btn"
+              onClick={goBack}
+            >
+              ← {back}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className={fadeIn ? 'fade-in' : ''}>
+          <h2 className="result-title">{resultTitle}</h2>
+          <div className="result-card">
+            <img
+              src={`/logos/${winnerKey}.png`}
+              alt={translations[lang].parties[winnerKey]}
+              className="party-logo"
+            />
+            <p className="party-name">
+              {translations[lang].parties[winnerKey]}
+            </p>
+          </div>
+          <button className="reset-btn" onClick={resetQuiz}>
+            {reset}
           </button>
         </div>
-      </div>
-    );
-  }
-
-  const results = getResult();
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2>Your political alignment results</h2>
-      {results.length === 1 ? (
-        <p>You are most aligned with <strong>{results[0].name}</strong>.</p>
-      ) : (
-        <p>
-          You are equally aligned with:
-          <ul>
-            {results.map(r => <li key={r.id}>{r.name}</li>)}
-          </ul>
-        </p>
       )}
-      <button onClick={handleReset} style={{ marginTop: '1rem' }}>
-        Reset Quiz
-      </button>
     </div>
   );
 }
-
-export default App;
