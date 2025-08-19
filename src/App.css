@@ -47,7 +47,7 @@ body {
 .quiz-container {
   max-width: 480px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 40px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -120,8 +120,8 @@ body {
 .result-card {
   margin: 24px 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: space-between;
 }
 .party-logo {
   max-width: 120px;
@@ -187,4 +187,16 @@ body {
 .lang-btn:not(.active):hover {
   background: #e6f6ff;
 }
-
+.medal {
+  font-size: 30px;
+}
+.result-separator {
+  color: color(srgb 0.96 0.96 0.96 / 0.42);
+}
+.footer {
+  padding-top: 60px;
+  margin-bottom: -30px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.48);
+  font-size: 13px;
+}
