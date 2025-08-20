@@ -11,11 +11,11 @@ export default function App() {
     return saved && LANGS.includes(saved) ? saved : 'ro';
   });
 
-  const { quizTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, start, questions, parties } = translations[lang];
+  const { quizStartTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, privacy, start, parties, questions } = translations[lang];
 
   const [answers, setAnswers] = useState(() => {
     const saved = localStorage.getItem('quizAnswers');
-    return saved ? JSON.parse(saved) : Array(questions.length).fill(null);
+    return saved ? JSON.parse(saved) : Array(Object.keys(questions).length).fill(null);
   });
 
   const [current, setCurrent] = useState(() => {
@@ -50,19 +50,19 @@ export default function App() {
 
   const handleAnswer = (scores) => {
     const nxt = [...answers];
-    nxt[current] = scores;
+    nxt[current - 1] = scores;
     setAnswers(nxt);
-    if (current < questions.length - 1) setCurrent(current + 1);
+    if (current < Object.keys(questions).length) setCurrent(current + 1);
     else setShowResult(true);
   };
 
-  const goBack = () => current > 0 && setCurrent(current - 1);
+  const goBack = () => current > 1 ? setCurrent(current - 1) : resetQuiz();
 
   const resetQuiz = () => {
-    setAnswers(Array(questions.length).fill(null));
-    setCurrent(0);
-    setShowResult(false);
+    setAnswers(Array(Object.keys(questions).length).fill(null));
     setStarted(false);
+    setShowResult(false);
+    setCurrent(0);
     localStorage.removeItem('quizAnswers');
     localStorage.removeItem('quizIndex');
     localStorage.removeItem('quizComplete');
@@ -83,7 +83,7 @@ export default function App() {
   const sortedParties = Object.entries(totals).sort((a, b) => b[1] - a[1]);
   const topParties = sortedParties.slice(0, 3);
 
-  const progressPct = Math.round(((current + (showResult ? 1 : 0)) / questions.length) * 100);
+  const progressPct = Math.round(((current + (showResult ? 1 : 0)) / Object.keys(questions).length) * 100);
 
   const medals = ['🥇', '🥈', '🥉'];
 
@@ -101,24 +101,26 @@ export default function App() {
 
       {!started ? (
         <div className="start-screen fade-in">
-          <h1 className="quiz-title">{quizTitle}</h1>
+          <h1 className="quiz-title">{quizStartTitle}</h1>
           <p className="disclaimer">
             {disclaimer}
           </p>
-          <button className="reset-btn" onClick={() => setStarted(true)}>{start}</button>
+          <p className="disclaimer">
+            {privacy}
+          </p>
+          <button className="reset-btn" onClick={() => { setCurrent(1); setStarted(true); }}>{start}</button>
         </div>
       ) : !showResult ? (
         <div className={fadeIn ? 'fade-in' : ''}>
-          <h1 className="quiz-title">{quizTitle}</h1>
           <div className="progress-container">
             <div className="progress-bar" style={{ width: `${progressPct}%` }} />
           </div>
           <h2 className="question-header">
-            {questionLabel} {current + 1} {ofLabel} {questions.length}
+            {questionLabel} {current} {ofLabel} {Object.keys(questions).length}
           </h2>
           <p className="question-text">{questions[current].text}</p>
           <div className="options">
-            {questions[current].options.map((opt, i) => (
+            {Object.entries(questions[current].options).map(([i, opt]) => (
               <button
                 key={i}
                 className="option"
