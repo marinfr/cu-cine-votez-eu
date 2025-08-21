@@ -83,7 +83,7 @@ export default function App() {
   const sortedParties = Object.entries(totals).sort((a, b) => b[1] - a[1]);
   const topParties = sortedParties.slice(0, 3);
 
-  const progressPct = Math.round(((current + (showResult ? 1 : 0)) / Object.keys(questions).length) * 100);
+  const progressPct = Math.round(((current - 1 + (showResult ? 1 : 0)) / Object.keys(questions).length) * 100);
 
   const medals = ['🥇', '🥈', '🥉'];
 
@@ -102,8 +102,7 @@ export default function App() {
       {!started ? (
         <div className="start-screen fade-in">
           <h1 className="quiz-title">{quizStartTitle}</h1>
-          <p className="disclaimer">
-            {disclaimer}
+          <p className="disclaimer" dangerouslySetInnerHTML={{ __html: disclaimer }}>
           </p>
           <p className="disclaimer">
             {privacy}
@@ -155,6 +154,7 @@ export default function App() {
                   />
                   <div className="party-score big-score">{score}</div>
                 </div>
+                <p className="party-name">{parties[key]}</p>
                 {idx < topParties.length - 1 && <hr className="result-separator" />}
               </React.Fragment>
             ))}

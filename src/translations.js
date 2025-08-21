@@ -1,25 +1,25 @@
 const elements = {
   ro: {
-    quizStartTitle: 'Nu ştii cu cine sa votezi?',
-    questionLabel: 'Întrebare',
+    quizStartTitle: 'Nu ştii cu cine să votezi...',
+    questionLabel: 'Întrebarea',
     ofLabel: 'din',
     back: 'Înapoi',
-    reset: 'Resetează chestionar',
+    reset: 'Resetează chestionarul',
     resultTitle: 'Rezultate:',
     start: 'Start',
-    disclaimer: 'Te ajut. Dar sa stii ca acest chestionar este doar orientativ și nu poate înlocui o analiză atentă a programelor, valorilor și candidaților. Alegerea votului necesită mai multă reflecție decât rezultatul unui quiz.',
-    privacy: 'Toata interactiunea si rezultatele se pastreaza doar in clientul tau si nu sunt transmise nimanui.'
+    disclaimer: 'la Alegerile pentru Parlamentul Republicii Moldova din <strong>28 septembrie 2025</strong>? Te ajut. Dar să știi că acest chestionar nu poate înlocui o analiză atentă a programelor și valorilor ale candidaților. Decizia ta merită mai multă reflecție decât rezultatul unui quiz.',
+    privacy: 'Toată interacțiunea și rezultatul sunt stocate doar la tine și nu sunt transmise nimănui.'
   },
   ru: {
-    quizStartTitle: 'Nu ştii cu cine sa votezi?',
-    questionLabel: 'Вопрос',
-    ofLabel: 'из',
-    back: 'Назад',
-    reset: 'Сбросить опрос',
+    quizStartTitle: 'Nu ştii cu cine să votezi...',
+    questionLabel: 'Întrebarea',
+    ofLabel: 'din',
+    back: 'Înapoi',
+    reset: 'Resetează chestionarul',
     resultTitle: 'Rezultate:',
     start: 'Start',
-    disclaimer: 'Te ajut. Dar sa stii ca acest chestionar este doar orientativ și nu poate înlocui o analiză atentă a programelor, valorilor și candidaților. Alegerea votului necesită mai multă reflecție decât rezultatul unui quiz.',
-    privacy: 'Toata interactiunea si rezultatele se pastreaza doar in clientul tau si nu sunt transmise nimanui.'
+    disclaimer: 'la Alegerile pentru Parlamentul Republicii Moldova din <strong>28 septembrie 2025</strong>? Te ajut. Dar să știi că acest chestionar nu poate înlocui o analiză atentă a programelor și valorilor ale candidaților. Decizia ta merită mai multă reflecție decât rezultatul unui quiz.',
+    privacy: 'Toată interacțiunea și rezultatul sunt stocate doar la tine și nu sunt transmise nimănui.'
   }
 }
 
