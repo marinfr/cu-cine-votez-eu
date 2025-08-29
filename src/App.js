@@ -11,7 +11,7 @@ export default function App() {
     return saved && LANGS.includes(saved) ? saved : 'ro';
   });
 
-  const { quizStartTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, privacy, start, parties, questions } = translations[lang];
+  const { quizStartTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, privacy, start, parties, questions, options } = translations[lang];
 
   const [answers, setAnswers] = useState(() => {
     const saved = localStorage.getItem('quizAnswers');
@@ -81,7 +81,7 @@ export default function App() {
   });
 
   const sortedParties = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-  const topParties = sortedParties.slice(0, 3);
+  const topParties = sortedParties.slice(0, 5);
 
   const progressPct = Math.round(((current - 1 + (showResult ? 1 : 0)) / Object.keys(questions).length) * 100);
 
@@ -119,13 +119,13 @@ export default function App() {
           </h2>
           <p className="question-text">{questions[current].text}</p>
           <div className="options">
-            {Object.entries(questions[current].options).map(([i, opt]) => (
+            {Object.entries(options).map(([i, opt]) => (
               <button
                 key={i}
                 className="option"
-                onClick={() => handleAnswer(opt.scores)}
+                onClick={() => handleAnswer(questions[current].options[i])}
               >
-                {opt.text}
+                {opt}
               </button>
             ))}
           </div>
@@ -168,6 +168,11 @@ export default function App() {
       <footer className="footer">
         <p>
           Vibe-coded by <a href="https://www.linkedin.com/in/marin-frecautan" target="_blank" rel="noopener noreferrer">Marin</a>
+        </p>
+        <p>
+          <a href="https://github.com/marinfr/cu-cine-votez-eu" target="_blank" rel="noopener noreferrer">
+            <img className="gh-link" src="https://cdn-icons-png.flaticon.com/512/25/25231.png"/>
+          </a>
         </p>
       </footer>
     </div>

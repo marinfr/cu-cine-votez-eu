@@ -124,7 +124,8 @@ body {
   justify-content: space-between;
 }
 .party-logo {
-  max-width: 120px;
+  max-width: 100px;
+  max-height: 70px;
   margin-bottom: 12px;
 }
 
@@ -203,4 +204,8 @@ body {
   margin-top: -20px;
   margin-left: 30px;
   margin-right: 9px;
+}
+.gh-link {
+  width: 20px;
+  opacity: 60%;
 }
