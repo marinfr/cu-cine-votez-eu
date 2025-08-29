@@ -171,7 +171,7 @@ export default function App() {
         </p>
         <p>
           <a href="https://github.com/marinfr/cu-cine-votez-eu" target="_blank" rel="noopener noreferrer">
-            <img className="gh-link" src="https://cdn-icons-png.flaticon.com/512/25/25231.png"/>
+            <img alt="github" className="gh-link" src="https://cdn-icons-png.flaticon.com/512/25/25231.png"/>
           </a>
         </p>
       </footer>
