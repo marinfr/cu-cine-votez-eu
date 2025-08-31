@@ -58,7 +58,6 @@ body {
   border-radius: 4px;
   overflow: hidden;
   height: 8px;
-  margin-bottom: 16px;
 }
 
 .progress-bar {
@@ -68,9 +67,15 @@ body {
 }
 
 .question-header {
-  margin: 0 0 8px;
-  font-size: 1rem;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.question-counter {
   color: #555;
+  font-size: 1rem;
 }
 
 .question-text {
@@ -200,7 +205,7 @@ body {
 }
 .party-name {
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   margin-top: -20px;
   margin-left: 30px;
   margin-right: 9px;

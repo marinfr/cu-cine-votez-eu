@@ -11,7 +11,7 @@ export default function App() {
     return saved && LANGS.includes(saved) ? saved : 'ro';
   });
 
-  const { quizStartTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, privacy, start, parties, questions, options } = translations[lang];
+  const { survey, quizStartTitle, questionLabel, ofLabel, back, reset, resultTitle, disclaimer, privacy, start, parties, questions, options } = translations[lang];
 
   const [answers, setAnswers] = useState(() => {
     const saved = localStorage.getItem('quizAnswers');
@@ -85,7 +85,7 @@ export default function App() {
 
   const progressPct = Math.round(((current - 1 + (showResult ? 1 : 0)) / Object.keys(questions).length) * 100);
 
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
 
   return (
     <div className="quiz-container">
@@ -114,9 +114,12 @@ export default function App() {
           <div className="progress-container">
             <div className="progress-bar" style={{ width: `${progressPct}%` }} />
           </div>
-          <h2 className="question-header">
-            {questionLabel} {current} {ofLabel} {Object.keys(questions).length}
-          </h2>
+          <span className="question-header">
+            <h2 className="question-counter">
+              {questionLabel} {current} {ofLabel} {Object.keys(questions).length}
+            </h2>
+            <a href={`/survey/${current}.pdf`} target="_blank" rel="noopener noreferrer">{survey}</a>
+          </span>
           <p className="question-text">{questions[current].text}</p>
           <div className="options">
             {Object.entries(options).map(([i, opt]) => (
